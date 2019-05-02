@@ -19,6 +19,7 @@ jobs:
 
   - script: |
       # TODO docker login, see .travis.yml
+      sudo chown -R 1000 $(Build.SourcesDirectory)
       make build BRANCH=master && make test BRANCH=master
     displayName: 'Docker build'
 
