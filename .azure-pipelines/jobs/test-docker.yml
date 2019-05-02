@@ -1,0 +1,25 @@
+parameters:
+  docker: ''  # defaults for any parameters that aren't specified
+  dockerTag: 'master'
+  name: ''
+  vmImage: 'Ubuntu-16.04'
+
+jobs:
+
+- job:  ${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+
+  steps:
+  - script: |
+      sudo apt-get update && sudo apt-get install -qyy debootstrap
+      sudo chown -R 1000 $(Build.SourcesDirectory)
+      cd "${{ parameters.docker }}" && make update
+    displayName: 'Docker install'
+
+  - script: |
+      # TODO docker login, see .travis.yml
+      make build BRANCH=master && make test BRANCH=master
+    displayName: 'Docker build'
+
+  # TODO after_success, see .travis.yml
