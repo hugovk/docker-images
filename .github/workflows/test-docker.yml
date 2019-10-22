@@ -1,0 +1,42 @@
+name: Test Docker
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker: [
+          alpine,
+          arch,
+          ubuntu-16.04-xenial-amd64,
+          ubuntu-18.04-bionic-amd64,
+          debian-9-stretch-x86,
+          debian-10-buster-x86,
+          centos-6-amd64,
+          centos-7-amd64,
+          amazon-1-amd64,
+          amazon-2-amd64,
+          fedora-29-amd64,
+          fedora-30-amd64,
+        ]
+
+    name: ${{ matrix.docker }}
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install
+      run: |
+        sudo apt-get update && sudo apt-get install -qyy debootstrap
+        # The Pillow user in the docker container is UID 1000
+        sudo chown -R 1000 $GITHUB_WORKSPACE
+        cd ${{ matrix.docker }} && make update
+
+    - name: Build
+      run: make build BRANCH=master
+
+    - name: Test
+      run: make test BRANCH=master
