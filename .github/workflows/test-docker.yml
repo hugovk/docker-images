@@ -36,7 +36,9 @@ jobs:
         cd ${{ matrix.docker }} && make update
 
     - name: Build
-      run: make build BRANCH=master
+      run: |
+        sudo chown -R 1000 $GITHUB_WORKSPACE
+        make build BRANCH=master
 
     - name: Test
       run: make test BRANCH=master
