@@ -32,6 +32,9 @@ jobs:
       run: |
         sudo apt-get update && sudo apt-get install -qyy debootstrap
         # The Pillow user in the docker container is UID 1000
+        pwd
+        ls -l
+        ls -l  $GITHUB_WORKSPACE
         sudo chown -R 1000 $GITHUB_WORKSPACE
         pwd
         ls -l
