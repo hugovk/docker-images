@@ -33,6 +33,9 @@ jobs:
         sudo apt-get update && sudo apt-get install -qyy debootstrap
         # The Pillow user in the docker container is UID 1000
         sudo chown -R 1000 $GITHUB_WORKSPACE
+        pwd
+        ls -l
+        ls -l  $GITHUB_WORKSPACE
         cd ${{ matrix.docker }} && make update
 
     - name: Build
