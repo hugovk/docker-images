@@ -43,3 +43,5 @@ the container with bash.
 ## Update Pillow
 
 To push an update of Pillow to this repository, run `./update-pillow.sh [[release tag]]`
+
+
