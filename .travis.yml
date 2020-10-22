@@ -2,6 +2,7 @@ language: python
 notifications:
   irc: chat.freenote.net#pil
 dist: xenial
+virt: lxd
 services:
 - docker
 matrix:
