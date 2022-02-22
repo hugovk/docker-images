@@ -59,10 +59,13 @@ jobs:
           fi
           sudo chown -R 1000 $(pwd)
 
+      - name: Update image
+        run: |
+          cd "${{ matrix.image }}" && sudo chmod a+w . && make update
+
       - name: Build image
         id: build
         run: |
-          cd "${{ matrix.image }}" && sudo chmod a+w . && make update
           if [[ -n "$DOCKER_USERNAME" ]]; then
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin && echo "::set-output name=logged_in::true"
           fi
