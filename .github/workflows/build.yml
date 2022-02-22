@@ -75,10 +75,14 @@ jobs:
             echo "::set-output name=logged_in::true"
           fi
           make build BRANCH=main
-          make test BRANCH=main
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Test image
+        run: |
+          cd "${{ matrix.image }}"
+          make test BRANCH=main
 
       - name: Log image size
         run: |
