@@ -28,16 +28,13 @@ jobs:
           - "debian-11-bullseye-x86"
           - "fedora-34-amd64"
           - "fedora-35-amd64"
+          - "gentoo"
           - "manylinux2014-wheel-build"
           - "ubuntu-18.04-bionic-amd64"
           - "ubuntu-20.04-focal-amd64"
           - "ubuntu-20.04-focal-amd64-valgrind"
         include:
-          - image: "ubuntu-20.04-focal-arm64v8"
-            qemu-arch: "aarch64"
-          - image: "ubuntu-20.04-focal-ppc64le"
-            qemu-arch: "ppc64le"
-          - image: "ubuntu-20.04-focal-s390x"
+          - image: "gentoo"
             qemu-arch: "s390x"
 
     steps:
