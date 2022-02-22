@@ -52,7 +52,8 @@ jobs:
 
       - name: Prepare build
         run: |
-          sudo apt-get update && sudo apt-get install -qyy debootstrap
+          sudo apt-get update
+          sudo apt-get install -qyy debootstrap
           if [ "${{ matrix.target }}" = "latest" ]; then
             git submodule update --remote Pillow
             (cd Pillow && git checkout main)
@@ -61,15 +62,20 @@ jobs:
 
       - name: Update image
         run: |
-          cd "${{ matrix.image }}" && sudo chmod a+w . && make update
+          cd "${{ matrix.image }}"
+          sudo chmod a+w .
+          make update
 
       - name: Build image
         id: build
         run: |
+          cd "${{ matrix.image }}"
           if [[ -n "$DOCKER_USERNAME" ]]; then
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin && echo "::set-output name=logged_in::true"
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            echo "::set-output name=logged_in::true"
           fi
-          make build BRANCH=main && make test BRANCH=main
+          make build BRANCH=main
+          make test BRANCH=main
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
