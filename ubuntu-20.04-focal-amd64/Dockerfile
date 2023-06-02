@@ -48,13 +48,15 @@ RUN useradd pillow \
     && mkdir /home/pillow \
     && chown pillow:pillow /home/pillow
 
+ARG PIP_NO_CACHE_DIR=1
+
 RUN virtualenv -p /usr/bin/python3.8 --system-site-packages /vpy3 \
-    && /vpy3/bin/pip install --no-cache-dir --upgrade pip \
-    && /vpy3/bin/pip install --no-cache-dir cffi olefile pyside6 pytest pytest-cov pytest-timeout \
+    && /vpy3/bin/pip install --upgrade pip \
+    && /vpy3/bin/pip install cffi olefile pyside6 pytest pytest-cov pytest-timeout \
     && chown -R pillow:pillow /vpy3
 
 ADD depends /depends
-RUN /usr/bin/python3 -m pip install --no-cache-dir meson
+RUN /usr/bin/python3 -m pip install meson
 RUN cd /depends \
     && ./install_imagequant.sh \
     && ./install_raqm.sh

@@ -28,10 +28,12 @@ RUN dnf install -y \
 RUN useradd pillow \
     && chown pillow:pillow /home/pillow
 
+ARG PIP_NO_CACHE_DIR=1
+
 RUN virtualenv -p /usr/bin/python3.11 --system-site-packages /vpy3 \
-    && /vpy3/bin/pip install --no-cache-dir --upgrade pip \
-    && /vpy3/bin/pip install --no-cache-dir cffi olefile pytest pytest-cov pytest-timeout \
-    && /vpy3/bin/pip install --no-cache-dir numpy --only-binary=:all: || true \
+    && /vpy3/bin/pip install --upgrade pip \
+    && /vpy3/bin/pip install cffi olefile pytest pytest-cov pytest-timeout \
+    && /vpy3/bin/pip install numpy --only-binary=:all: || true \
     && chown -R pillow:pillow /vpy3
 
 ADD depends /depends

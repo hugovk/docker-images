@@ -33,9 +33,11 @@ RUN emerge --quiet app-text/ghostscript-gpl dev-python/numpy
 RUN useradd pillow \
     && chown pillow:pillow /home/pillow
 
+ARG PIP_NO_CACHE_DIR=1
+
 RUN virtualenv --system-site-packages /vpy3 \
-    && /vpy3/bin/pip install --no-cache-dir --upgrade pip \
-    && /vpy3/bin/pip install --no-cache-dir cffi pytest-cov pytest-timeout \
+    && /vpy3/bin/pip install --upgrade pip \
+    && /vpy3/bin/pip install cffi pytest-cov pytest-timeout \
     && chown -R pillow:pillow /vpy3
 
 ADD depends /depends
