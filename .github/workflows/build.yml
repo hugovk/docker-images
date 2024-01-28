@@ -7,10 +7,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_COLOR: 1
+  REGISTRY: ghcr.io
+
 jobs:
   build:
     name: ${{ matrix.target }} + ${{ matrix.image }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -81,7 +88,10 @@ jobs:
         if: "matrix.test-image"
         run: |
           cd "${{ matrix.test-image }}"
-          make pull || (sudo chmod a+w . && make update && make build BRANCH=main)
+          make pull REGISTRY=${{ env.REGISTRY }} \
+            || (sudo chmod a+w . \
+                && make update \
+                && make build BRANCH=main REGISTRY=${{ env.REGISTRY }})
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
@@ -89,18 +99,31 @@ jobs:
         id: build
         run: |
           cd "${{ matrix.image }}" && sudo chmod a+w . && make update
-          if [[ -n "$DOCKER_USERNAME" ]]; then
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin && echo "logged_in=true" >> $GITHUB_OUTPUT
-          fi
-          make build BRANCH=main
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          make build \
+            BRANCH=main \
+            IMAGENAME=hugovk/${{ matrix.image }} \
+            REGISTRY=${{ env.REGISTRY }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ matrix.image }}
 
       - name: Test image
         run: |
           cd "${{ matrix.image }}"
-          make test BRANCH=main
+          make test \
+            BRANCH=main \
+            IMAGENAME=hugovk/${{ matrix.image }} \
+            REGISTRY=${{ env.REGISTRY }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
@@ -109,11 +132,15 @@ jobs:
           docker images
 
       - name: Push image
-        if: "steps.build.outputs.logged_in == 'true'
-                           && github.event_name == 'push'
-                           && github.ref == 'refs/heads/main'
-                           && matrix.target == 'latest'"
-        run: make push-${{ matrix.image }} BRANCH=main
+#        if: "steps.build.outputs.logged_in == 'true'
+#                           && github.event_name == 'push'
+#                           && github.ref == 'refs/heads/main'
+#                           && matrix.target == 'latest'"
+        run: |
+          make push-${{ matrix.image }} \
+            BRANCH=main \
+            IMAGENAME=hugovk/${{ matrix.image }} \
+            REGISTRY=${{ env.REGISTRY }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 

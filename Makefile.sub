@@ -1,6 +1,7 @@
 WD = $(shell pwd)
 TARGET := $(notdir $(WD))
 ROOT := $(abspath $(WD)/../Pillow)
+REGISTRY := ghcr.io
 IMAGENAME := $(if $(DOCKER_USERNAME), $(DOCKER_USERNAME)/$(TARGET), $(TARGET))
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 TEST_IMAGE := $(if $(DOCKER_USERNAME), $(DOCKER_USERNAME)/$(TARGET):$(BRANCH), pythonpillow/$(TARGET):main)
@@ -9,7 +10,7 @@ TEST_IMAGE := $(if $(DOCKER_USERNAME), $(DOCKER_USERNAME)/$(TARGET):$(BRANCH), p
 build:
 	cp -r ../Pillow/depends .
 	cp test.sh depends
-	docker build -t $(IMAGENAME):$(BRANCH) .
+	docker build -t $(REGISTRY)/$(IMAGENAME):$(BRANCH) .
 
 .PHONY: update
 update:
@@ -17,15 +18,15 @@ update:
 
 .PHONY: test
 test:
-	docker run --rm -v $(ROOT):/Pillow $(IMAGENAME):$(BRANCH)
+	docker run --rm -v $(ROOT):/Pillow $(REGISTRY)/$(IMAGENAME):$(BRANCH)
 
 .PHONY: push
 push:
-	docker push $(IMAGENAME):$(BRANCH)
+	docker push $(REGISTRY)/$(IMAGENAME):$(BRANCH)
 
 .PHONY: pull
 pull:
-	docker pull $(TEST_IMAGE)
+	docker pull $(REGISTRY)/$(TEST_IMAGE)
 
 .PHONY: clean
 clean:
@@ -33,5 +34,5 @@ clean:
 
 .PHONY: shell
 shell:
-	docker run --rm -it -v $(ROOT):/Pillow $(IMAGENAME):$(BRANCH) /bin/bash
+	docker run --rm -it -v $(ROOT):/Pillow $(REGISTRY)/$(IMAGENAME):$(BRANCH) /bin/bash
 
