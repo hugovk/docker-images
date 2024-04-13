@@ -19,7 +19,8 @@ TARGETS = \
 	ubuntu-22.04-jammy-amd64-valgrind \
 	ubuntu-22.04-jammy-arm64v8 \
 	ubuntu-22.04-jammy-ppc64le \
-	ubuntu-22.04-jammy-s390x
+	ubuntu-22.04-jammy-s390x \
+	ubuntu-24.04-noble-amd64
 
 BUILDDIRS = $(TARGETS:%=build-%)
 PUSHDIRS = $(TARGETS:%=push-%)

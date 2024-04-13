@@ -21,6 +21,7 @@ jobs:
 #          - "ubuntu-22.04-jammy-s390x"
           # test image for manylinux-wheel build
           - "ubuntu-22.04-jammy-amd64"
+          - "ubuntu-24.04-noble-amd64"
           # Then run the remainder
 #          - "alpine"
 #          - "amazon-2-amd64"
