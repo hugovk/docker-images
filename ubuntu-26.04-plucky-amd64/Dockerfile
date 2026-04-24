@@ -49,7 +49,7 @@ RUN useradd pillow \
 ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 ARG PIP_NO_CACHE_DIR=1
 
-RUN virtualenv -p /usr/bin/python3.14 --system-site-packages /vpy3 \
+RUN virtualenv -p /usr/bin/python3.13 --system-site-packages /vpy3 \
     && /vpy3/bin/pip install --upgrade pip \
     && /vpy3/bin/pip install olefile pyside6 pytest pytest-cov pytest-timeout \
     && chown -R pillow:pillow /vpy3
