@@ -63,7 +63,24 @@ jobs:
       - name: Test image
         run: |
           cd "${{ matrix.image }}"
-          docker run --rm -v ${{ github.workspace }}/Pillow:/Pillow ubuntu-26.04-plucky-s390x:main bash -c "source /vpy3/bin/activate && cd /Pillow && make clean && make install-coverage && python -m pytest Tests/test_file_webp_animated.py -xvs"
+          docker run --rm -v ${{ github.workspace }}/Pillow:/Pillow ubuntu-26.04-plucky-s390x:main bash -c '
+            source /vpy3/bin/activate
+            cd /Pillow
+            make clean
+            make install-coverage
+
+            echo "=== runtime webp version ==="
+            python3 -c "from PIL import features; print(features.version(\"webp\"))"
+
+            echo "=== ldd _webp.so ==="
+            find /vpy3 -name "_webp*" -exec ldd {} \;
+
+            echo "=== libwebp files ==="
+            ls -la /usr/lib/libwebp* /usr/lib/s390x-linux-gnu/libwebp* 2>/dev/null
+
+            echo "=== running test ==="
+            python -m pytest Tests/test_file_webp_animated.py -xvs
+          '
 
       - name: Log image size
         run: |
