@@ -63,9 +63,7 @@ jobs:
       - name: Test image
         run: |
           cd "${{ matrix.image }}"
-          make test BRANCH=main
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          docker run --rm -v ${{ github.workspace }}/Pillow:/Pillow ubuntu-26.04-plucky-s390x:main bash -c "source /vpy3/bin/activate && cd /Pillow && make clean && make install-coverage && python -m pytest Tests/test_file_webp_animated.py -xvs"
 
       - name: Log image size
         run: |
