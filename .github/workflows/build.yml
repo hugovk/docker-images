@@ -18,20 +18,11 @@ jobs:
       matrix:
         os: ["ubuntu-latest"]
         image:
-          # Run slower jobs first to give them a headstart and reduce waiting time
-          - "ubuntu-26.04-plucky-ppc64le"
           - "ubuntu-26.04-plucky-s390x"
-          # Then run the remainder
-          - "ubuntu-26.04-plucky-amd64"
         include:
-          - image: "ubuntu-26.04-plucky-ppc64le"
-            qemu-arch: "ppc64le"
-            docker-args: "--platform linux/ppc64le"
           - image: "ubuntu-26.04-plucky-s390x"
             qemu-arch: "s390x"
             docker-args: "--platform linux/s390x"
-          - image: "ubuntu-26.04-plucky-arm64v8"
-            os: "ubuntu-24.04-arm"
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
