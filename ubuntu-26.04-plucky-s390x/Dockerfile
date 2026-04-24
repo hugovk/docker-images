@@ -15,6 +15,7 @@ RUN apt-get -qq update \
     liblcms2-dev \
     libopenjp2-7-dev \
     libtiff5-dev \
+    libwebp-dev \
     meson \
     netpbm \
     python3-dev \
@@ -44,8 +45,7 @@ RUN virtualenv -p /usr/bin/python3.13 --system-site-packages /vpy3 \
 
 COPY depends /depends
 RUN cd /depends \
-    && ./install_raqm.sh \
-    && ./install_webp.sh
+    && ./install_raqm.sh
 
 ENV FORCE_COLOR=1
 
