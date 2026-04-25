@@ -1,4 +1,4 @@
-FROM ubuntu:plucky
+FROM ubuntu:resolute
 
 RUN apt-get -qq update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
@@ -63,4 +63,4 @@ ENV FORCE_COLOR=1
 USER pillow
 CMD ["depends/test.sh"]
 
-#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-plucky-amd64
+#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-resolute-amd64

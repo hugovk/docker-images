@@ -1,4 +1,4 @@
-FROM arm64v8/ubuntu:plucky
+FROM s390x/ubuntu:resolute
 
 RUN apt-get -qq update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
@@ -7,26 +7,14 @@ RUN apt-get -qq update \
     ghostscript \
     git \
     libavif-dev \
-    libegl-dev \
     libfreetype6-dev \
     libfribidi-dev \
     libharfbuzz-dev \
     libimagequant-dev \
     libjpeg-turbo8-dev \
     liblcms2-dev \
-    libopengl-dev \
     libopenjp2-7-dev \
-    libssl-dev \
     libtiff5-dev \
-    libwebp-dev \
-    libxcb-cursor0 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-keysyms1 \
-    libxcb-randr0 \
-    libxcb-render-util0 \
-    libxcb-shape0 \
-    libxkbcommon-x11-0 \
     meson \
     netpbm \
     python3-dev \
@@ -51,16 +39,18 @@ ARG PIP_NO_CACHE_DIR=1
 
 RUN virtualenv -p /usr/bin/python3.13 --system-site-packages /vpy3 \
     && /vpy3/bin/pip install --upgrade pip \
-    && /vpy3/bin/pip install olefile pyside6 pytest pytest-cov pytest-timeout \
+    && /vpy3/bin/pip install olefile pytest pytest-cov pytest-timeout \
     && chown -R pillow:pillow /vpy3
 
 COPY depends /depends
 RUN cd /depends \
-    && ./install_raqm.sh
+    && ./install_raqm.sh \
+    && ./install_webp.sh
 
 ENV FORCE_COLOR=1
+ENV LD_LIBRARY_PATH=/usr/lib
 
 USER pillow
 CMD ["depends/test.sh"]
 
-#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-plucky-arm64v8
+#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-resolute-s390x

@@ -1,4 +1,4 @@
-FROM s390x/ubuntu:plucky
+FROM ppc64le/ubuntu:resolute
 
 RUN apt-get -qq update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
@@ -14,7 +14,9 @@ RUN apt-get -qq update \
     libjpeg-turbo8-dev \
     liblcms2-dev \
     libopenjp2-7-dev \
+    libssl-dev \
     libtiff5-dev \
+    libwebp-dev \
     meson \
     netpbm \
     python3-dev \
@@ -44,13 +46,11 @@ RUN virtualenv -p /usr/bin/python3.13 --system-site-packages /vpy3 \
 
 COPY depends /depends
 RUN cd /depends \
-    && ./install_raqm.sh \
-    && ./install_webp.sh
+    && ./install_raqm.sh
 
 ENV FORCE_COLOR=1
-ENV LD_LIBRARY_PATH=/usr/lib
 
 USER pillow
 CMD ["depends/test.sh"]
 
-#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-plucky-s390x
+#docker run -v $GITHUB_WORKSPACE:/Pillow pythonpillow/ubuntu-26.04-resolute-ppc64le

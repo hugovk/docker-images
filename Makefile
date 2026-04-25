@@ -15,10 +15,10 @@ TARGETS = \
 	ubuntu-24.04-noble-arm64v8 \
 	ubuntu-24.04-noble-ppc64le \
 	ubuntu-24.04-noble-s390x \
-	ubuntu-26.04-plucky-amd64 \
-	ubuntu-26.04-plucky-arm64v8 \
-	ubuntu-26.04-plucky-ppc64le \
-	ubuntu-26.04-plucky-s390x
+	ubuntu-26.04-resolute-amd64 \
+	ubuntu-26.04-resolute-arm64v8 \
+	ubuntu-26.04-resolute-ppc64le \
+	ubuntu-26.04-resolute-s390x
 
 BUILDDIRS = $(TARGETS:%=build-%)
 PUSHDIRS = $(TARGETS:%=push-%)
